@@ -1,0 +1,74 @@
+[
+  {
+    "trans_name": "t1",
+    "h_state": "s1",
+    "t_state": "s2",
+    "input_event": "",
+    "guard": "",
+    "action": "TryCount := 0; ReqQos := 0; FinQos := 0;",
+    "output_event": ""
+  },
+  {
+    "trans_name": "t2",
+    "h_state": "s2",
+    "t_state": "s2",
+    "input_event": "?U.CONreq(qos);",
+    "guard": "qos > 1;",
+    "action": "ReqQos := qos;",
+    "output_event": "!U.Nonsupport(ReqQos);"
+  },
+  {
+    "trans_name": "t3",
+    "h_state": "s2",
+    "t_state": "s3",
+    "input_event": "?U.CONreq(qos);",
+    "guard": "qos <= 1;",
+    "action": "ReqQos := qos;",
+    "output_event": "!U.connect(ReqQos);"
+  },
+  {
+    "trans_name": "t4",
+    "h_state": "s3",
+    "t_state": "s3",
+    "input_event": "?U.refuse();",
+    "guard": "TryCount <> 2;",
+    "action": "TryCount := TryCount + 1;",
+    "output_event": "!U.connect(ReqQos);"
+  },
+  {
+    "trans_name": "t5",
+    "h_state": "s3",
+    "t_state": "s1",
+    "input_event": "?U.refuse();",
+    "guard": "TryCount = 2;",
+    "action": "",
+    "output_event": "!U.CONcnf();"
+  },
+  {
+    "trans_name": "t6",
+    "h_state": "s3",
+    "t_state": "s4",
+    "input_event": "?U.accept(qos);",
+    "guard": "",
+    "action": "FinQos := min(qos, ReqQos);",
+    "output_event": "!U.CONcnf(FinQos);"
+  },
+  {
+    "trans_name": "t7",
+    "h_state": "s4",
+    "t_state": "s1",
+    "input_event": "?U.reset();",
+    "guard": "",
+    "action": "",
+    "output_event": "!U.abort();"
+  },
+  {
+    "trans_name": "t8",
+    "h_state": "s4",
+    "t_state": "s4",
+    "input_event": "?U.Data();",
+    "guard": "",
+    "action": "",
+    "output_event": "!U.data(FinQos);"
+  }
+]

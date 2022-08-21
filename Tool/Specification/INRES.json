@@ -1,0 +1,164 @@
+[
+  {
+    "trans_name": "t1",
+    "h_state": "s1",
+    "t_state": "s1",
+    "input_event": "?PDU.DR();",
+    "guard": "",
+    "action": "",
+    "output_event": "!U.DIS();"
+  },
+  {
+    "trans_name": "t2",
+    "h_state": "s1",
+    "t_state": "s2",
+    "input_event": "?U.CON();",
+    "guard": "",
+    "action": "counter := 0;",
+    "output_event": "!PDU.CR();"
+  },
+  {
+    "trans_name": "t3",
+    "h_state": "s2",
+    "t_state": "s2",
+    "input_event": "?T.delay();",
+    "guard": "counter < 4;",
+    "action": "counter := counter + 1;",
+    "output_event": "!PDU.CR();"
+  },
+  {
+    "trans_name": "t4",
+    "h_state": "s2",
+    "t_state": "s1",
+    "input_event": "?T.delay();",
+    "guard": "counter = 4;",
+    "action": "",
+    "output_event": "!U.DIS();"
+  },
+  {
+    "trans_name": "t5",
+    "h_state": "s2",
+    "t_state": "s1",
+    "input_event": "?PDU.DR();",
+    "guard": "",
+    "action": "",
+    "output_event": "!U.DIS();"
+  },
+  {
+    "trans_name": "t6",
+    "h_state": "s2",
+    "t_state": "s3",
+    "input_event": "?PDU.CC();",
+    "guard": "",
+    "action": "number := 1;counter := 0;input := true;",
+    "output_event": "!U.Con();"
+  },
+  {
+    "trans_name": "t7",
+    "h_state": "s3",
+    "t_state": "s3",
+    "input_event": "?PDU.DT(optional);",
+    "guard": "optional = false;",
+    "action": "input := true;",
+    "output_event": ""
+  },
+  {
+    "trans_name": "t8",
+    "h_state": "s3",
+    "t_state": "s1",
+    "input_event": "?PDU.DR();",
+    "guard": "",
+    "action": "",
+    "output_event": "!U.DIS();"
+  },
+  {
+    "trans_name": "t9",
+    "h_state": "s3",
+    "t_state": "s4",
+    "input_event": "?U.DATA(SDU);",
+    "guard": "input = true;",
+    "action": "",
+    "output_event": "!PDU.DT(number, SDU);"
+  },
+  {
+    "trans_name": "t10",
+    "h_state": "s4",
+    "t_state": "s4",
+    "input_event": "?PDU.ACK(NUM, block);",
+    "guard": "block = false && counter < 4 && NUM <> number;",
+    "action": "number := NUM; counter := counter + 1;",
+    "output_event": "!PDU.DT(number);"
+  },
+  {
+    "trans_name": "t11",
+    "h_state": "s4",
+    "t_state": "s4",
+    "input_event": "?T.delay();",
+    "guard": "counter < 4;",
+    "action": "counter := counter + 1;",
+    "output_event": "!PDU.DT(number);"
+  },
+  {
+    "trans_name": "t12",
+    "h_state": "s4",
+    "t_state": "s3",
+    "input_event": "?PDU.ACK(NUM, block);",
+    "guard": "NUM = number && block = false;",
+    "action": "counter := 0; number := 1 - number;",
+    "output_event": ""
+  },
+  {
+    "trans_name": "t13",
+    "h_state": "s4",
+    "t_state": "s3",
+    "input_event": "?PDU.ACK(NUM, block);",
+    "guard": "NUM = number && block = true;",
+    "action": "counter := 0; number := 1 - number; input := false;",
+    "output_event": ""
+  },
+  {
+    "trans_name": "t14",
+    "h_state": "s4",
+    "t_state": "s5",
+    "input_event": "?PDU.ACK(NUM, block);",
+    "guard": "counter < 4 && block = true && NUM <> number;",
+    "action": "counter := counter + 1;",
+    "output_event": "!PDU.DT(number);"
+  },
+  {
+    "trans_name": "t15",
+    "h_state": "s5",
+    "t_state": "s4",
+    "input_event": "?PDU.DT(optional);",
+    "guard": "optional = false;",
+    "action": "",
+    "output_event": ""
+  },
+  {
+    "trans_name": "t16",
+    "h_state": "s4",
+    "t_state": "s1",
+    "input_event": "?PDU.ACK(NUM, block);",
+    "guard": "counter = 4 && NUM <> number;",
+    "action": "",
+    "output_event": "!U.DIS();"
+  },
+  {
+    "trans_name": "t17",
+    "h_state": "s4",
+    "t_state": "s1",
+    "input_event": "?T.delay();",
+    "guard": "counter = 4;",
+    "action": "",
+    "output_event": "!U.DIS();"
+  },
+  {
+    "trans_name": "t18",
+    "h_state": "s4",
+    "t_state": "s1",
+    "input_event": "?PDU.DR();",
+    "guard": "",
+    "action": "",
+    "output_event": "!U.DIS();"
+  }
+]

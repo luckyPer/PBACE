@@ -1,0 +1,155 @@
+[
+  {
+    "trans_name": "t1",
+    "h_state": "s1",
+    "t_state": "s2",
+    "input_event": "?U.SENDrequest();",
+    "guard": "",
+    "action": "",
+    "output_event": "!L.CR();"
+  },
+  {
+    "trans_name": "t2",
+    "h_state": "s2",
+    "t_state": "s3",
+    "input_event": "?L.CC();",
+    "guard": "",
+    "action": "",
+    "output_event": "!U.SENDconfirm();"
+  },
+  {
+    "trans_name": "t3",
+    "h_state": "s3",
+    "t_state": "s4",
+    "input_event": "?U.DATArequest(no_of_segment,blockbound);",
+    "guard": "",
+    "action": "number := 0; counter := 0;",
+    "output_event": ""
+  },
+  {
+    "trans_name": "t4",
+    "h_state": "s4",
+    "t_state": "s5",
+    "input_event": "?L.TOKENgive();",
+    "guard": "",
+    "action": "number := number + 1 ;",
+    "output_event": "!L.DT(number); !L.Start_timer() ; "
+  },
+  {
+    "trans_name": "t5",
+    "h_state": "s4",
+    "t_state": "s4",
+    "input_event": "?L.RESUME();",
+    "guard": "",
+    "action": "",
+    "output_event": ""
+  },
+  {
+    "trans_name": "t6",
+    "h_state": "s5",
+    "t_state": "s4",
+    "input_event": "",
+    "guard": "",
+    "action": "",
+    "output_event": "!L.TOKENrelease();"
+  },
+  {
+    "trans_name": "t7",
+    "h_state": "s5",
+    "t_state": "s7",
+    "input_event": "?L.ACK();",
+    "guard": "number = no_of_segment;",
+    "action": "",
+    "output_event": "!U.MONITOR_COMPLETE(counter); !L.TOKEN_RELEASE() ; !L.DISrequest() ;"
+  },
+  {
+    "trans_name": "t8",
+    "h_state": "s5",
+    "t_state": "s5",
+    "input_event": "?L.ACK();",
+    "guard": "number < no_of_segment ; ",
+    "action": "number := number + 1;",
+    "output_event": "!L.DT(number);"
+  },
+  {
+    "trans_name": "t9",
+    "h_state": "s5",
+    "t_state": "s6",
+    "input_event": "?L.BLOCK();",
+    "guard": "",
+    "action": "counter := counter + 1;",
+    "output_event": ""
+  },
+  {
+    "trans_name": "t10",
+    "h_state": "s6",
+    "t_state": "s5",
+    "input_event": "?L.RESUME();",
+    "guard": "counter <= blockbound;",
+    "action": "",
+    "output_event": ""
+  },
+  {
+    "trans_name": "t11",
+    "h_state": "s6",
+    "t_state": "s7",
+    "input_event": "",
+    "guard": "counter > blockbound ;",
+    "action": "",
+    "output_event": "!L.TOKENrelease() ; !U.MONITOR_INCOMPLETE(number) ; !U.DISrequest() ;"
+  },
+  {
+    "trans_name": "t12",
+    "h_state": "s6",
+    "t_state": "s4",
+    "input_event": "",
+    "guard": "counter <= blockbound ;",
+    "action": "",
+    "output_event": "!L.TOKENrelease() ;"
+  },
+  {
+    "trans_name": "t13",
+    "h_state": "s7",
+    "t_state": "s7",
+    "input_event": "?L.RESUME();",
+    "guard": "",
+    "action": "",
+    "output_event": ""
+  },
+  {
+    "trans_name": "t14",
+    "h_state": "s7",
+    "t_state": "s7",
+    "input_event": "?L.BLOCK();",
+    "guard": "",
+    "action": "",
+    "output_event": ""
+  },
+  {
+    "trans_name": "t15",
+    "h_state": "s7",
+    "t_state": "s7",
+    "input_event": "?L.ACK();",
+    "guard": "",
+    "action": "",
+    "output_event": ""
+  },
+  {
+    "trans_name": "t16",
+    "h_state": "s7",
+    "t_state": "s1",
+    "input_event": "?L.DISrequest() ;",
+    "guard": "",
+    "action": "",
+    "output_event": "!U.DISindication() ;"
+  },
+  {
+    "trans_name": "t17",
+    "h_state": "s2",
+    "t_state": "s1",
+    "input_event": "?L.DISrequest() ;",
+    "guard": "",
+    "action": "",
+    "output_event": "!U.DISindication() ;"
+  }
+]
