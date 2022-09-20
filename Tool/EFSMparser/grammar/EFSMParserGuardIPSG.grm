@@ -1,0 +1,72 @@
+"Name"    = 'EFSMParserGuardIPSG'
+"Author"  = 'st'
+"Version" = '0.1' 
+"About"   = 'This is intended to interpre and abstract some key informantion from an efsm'
+
+"Case Sensitive" = False 
+"Start Symbol"   = <Statements>
+
+! -------------------------------------------------
+! Character Sets
+! -------------------------------------------------
+
+{ID Head}      = {Letter} + [_]
+{ID Tail}      = {Alphanumeric} + [_]
+{String Chars} = {Printable} + {HT} - ["]
+
+! -------------------------------------------------
+! Terminals
+! -------------------------------------------------
+
+Id    = {ID Head}{ID Tail}*
+StringLiteral = '"' {String Chars}* '"'
+              
+Integer       = {Number}+                !------only two NUMiables types
+Bool          = 'True'|'true'|'false'|'False'
+              
+! -------------------------------------------------
+! Rules
+! -------------------------------------------------
+
+<Statements> ::= <Statement> ';' <Statements>
+               | <Statement> ';'
+
+<Statement>  ::= <Expression>
+                                
+<Expression> ::=  <Or Exp>
+
+<Or Exp> ::= <Or Exp> '||' <And Exp>
+        |  <And Exp>
+
+<And Exp> ::= <And Exp> '&&'<Equality Exp>
+        |  <Equality Exp>
+
+<Equality Exp>  
+       ::= <Equality Exp> '=' <Compare Exp>
+        |  <Equality Exp> '<>' <Compare Exp>
+        |  <Compare Exp>
+
+<Compare Exp>
+       ::= <Compare Exp> '<'  <Add Exp>
+        |  <Compare Exp> '>'  <Add Exp>
+        |  <Compare Exp> '<=' <Add Exp>
+        |  <Compare Exp> '>=' <Add Exp>
+        |  <Add Exp>
+
+<Add Exp>
+       ::= <Add Exp> '+' <Mult Exp>
+        |  <Add Exp> '-' <Mult Exp>
+        |  <Mult Exp>
+
+<Mult Exp>
+       ::= <Mult Exp> '*' <Value> 
+        |  <Mult Exp> '/' <Value>
+        |  <Mult Exp> '%' <Value> 
+        |  <Value>
+<Value>       ::= <VAR>           
+                | Integer
+                | Bool
+                | StringLiteral
+                | '(' <Expression> ')'
+<VAR> ::= Id
+

@@ -1,0 +1,98 @@
+"Name"    = 'EFSMParser'
+"Author"  = 'st'
+"Version" = '0.1' 
+"About"   = 'This is intended to interpre and abstract some key informantion from an efsm'
+
+"Case Sensitive" = False 
+"Start Symbol"   = <Statements>
+
+! -------------------------------------------------
+! Character Sets
+! -------------------------------------------------
+
+{ID Head}      = {Letter} + [_]
+{ID Tail}      = {Alphanumeric} + [_]
+{String Chars} = {Printable} + {HT} - ["]
+
+! -------------------------------------------------
+! Terminals
+! -------------------------------------------------
+
+Id    = {ID Head}{ID Tail}*
+StringLiteral = '"' {String Chars}* '"'
+              
+Integer       = {Number}+                !------only two NUMiables types
+Bool          = 'True'|'true'|'false'|'False'
+              
+! -------------------------------------------------
+! Rules
+! -------------------------------------------------
+
+<Statements> ::= <Statement> ';' <Statements>
+               | <Statement> ';'
+
+<Statement>  ::= <input_event>
+               | <output_event>
+               | <Expression>
+               | <AssignmentStatement>
+               |
+
+<input_event>  ::= '?' <Port> '.' <function_expr>
+                
+<output_event> ::= '!' <Port> '.' <function_expr>   
+
+<Port> ::= Id | 'T' !T means a delay singal
+        
+<Func ID> ::= Id    
+                                  
+<function_expr> ::=  <Func ID>'(' <Params> ')'
+                |   <Func ID> '(' ')'
+
+<Params>     ::= <Param> ',' <Params>
+               | <Param> '[' <Param> ']'
+               | <Param>
+
+<Param>      ::= Id
+
+<AssignmentStatement> ::= <VAR> ':=' <Expression>
+                        | <VAR> '+=' <Expression>
+                        | <VAR> '-=' <Expression>
+                        | <VAR> ':=' 'min' '(' <Expression> ',' <Expression> ')'
+                        | <VAR> ':=' 'max' '(' <Expression> ',' <Expression> ')'
+
+<Expression> ::=  <Or Exp>
+
+<Or Exp> ::= <Or Exp> '||' <And Exp>
+        |  <And Exp>
+
+<And Exp> ::= <And Exp> '&&'<Equality Exp>
+        |  <Equality Exp>
+
+<Equality Exp>
+       ::= <Equality Exp> '=' <Compare Exp>
+        |  <Equality Exp> '<>' <Compare Exp>
+        |  <Compare Exp>
+
+<Compare Exp>
+       ::= <Compare Exp> '<'  <Add Exp>
+        |  <Compare Exp> '>'  <Add Exp>
+        |  <Compare Exp> '<=' <Add Exp>
+        |  <Compare Exp> '>=' <Add Exp>
+        |  <Add Exp>
+
+<Add Exp>
+       ::= <Add Exp> '+' <Mult Exp>
+        |  <Add Exp> '-' <Mult Exp>
+        |  <Mult Exp>
+
+<Mult Exp>
+       ::= <Mult Exp> '*' <Value>
+        |  <Mult Exp> '/' <Value>
+        |  <Mult Exp> '%' <Value>
+        |  <Value>
+<VAR> ::= Id
+<Value>       ::= <VAR>
+                | Integer
+                | Bool
+                | StringLiteral
+                | '(' <Expression> ')'
