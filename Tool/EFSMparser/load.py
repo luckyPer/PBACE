@@ -3,7 +3,7 @@ import pyauparser
 import os
 from .efsm import EFSM
 from EFSMparser import EFSMParser
-from EFSMparser.utility import read_json_file
+from EFSMparser.utility import read_json_file, read_conf_by_key
 
 
 dir_name = os.path.dirname(__file__)
@@ -69,7 +69,7 @@ class LoadEFSM(object):
             self.efsm.set_context_vars(context_vars)
             self.efsm.set_inp_params(input_params)
 
-            _str_init_state = "s1"
+            _str_init_state = read_conf_by_key('init_state', 's')
             self.efsm.init_sc(_str_init_state, context_vars, input_params)
             self.efsm.update_tran_guard_set()
             self.efsm.set_model_name(specification_name)

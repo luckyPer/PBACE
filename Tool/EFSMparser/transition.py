@@ -33,6 +33,8 @@ class Transition(object):
     def get_use_var(self):
         return self.use_set
 
+    def get_inp_event(self):
+        return self.inp_event
 
 # class TransitionPath is not used
 class TransitionPath(object):

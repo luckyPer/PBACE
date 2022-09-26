@@ -5,7 +5,7 @@ import os
 
 from .transition import Transition
 from .stateConfiguration import SC
-from . import EFSMParser
+from EFSMparser import EFSMParser
 
 dir_name = os.path.dirname(__file__)
 
@@ -55,6 +55,9 @@ class EFSM(object):
 
     def get_states_table(self):
         return self.states_table
+
+    def get_trans_from_name_map(self, t_name):
+        return self.trans_name_map.get(t_name)
 
     def init_adjacency_matrix(self):
         length = len(self.states_table)
@@ -170,7 +173,7 @@ class EFSM(object):
         return _list
 
     def get_inp_params_by_trans_name(self, trans_name):
-        transition = self.trans_name_map[trans_name]
+        transition = self.get_trans_from_name_map(trans_name)
         input_params = transition.get_input_params()
         return input_params
 
@@ -199,7 +202,7 @@ class EFSM(object):
         if trans_name in self.guard_content:
             return self.guard_content.get(trans_name)
         content = {}
-        transition = self.trans_name_map[trans_name]
+        transition = self.get_trans_from_name_map(trans_name)
         if transition:
             guard = transition.guard
             if guard and guard != '':
@@ -273,13 +276,13 @@ class EFSM(object):
     # define-user begin
     def get_define_var(self, trans_name):
         trans_name = str(trans_name)
-        tran = self.trans_name_map[trans_name]
+        tran = self.get_trans_from_name_map(trans_name)
         define_var = tran.get_define_var()
         return define_var
 
     def get_use_var(self, trans_name):
         trans_name = str(trans_name)
-        tran = self.trans_name_map[trans_name]
+        tran = self.get_trans_from_name_map(trans_name)
         use_var = tran.get_use_var()
         return use_var
 
