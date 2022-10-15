@@ -18,3 +18,5 @@ The parsing syntax for EFSM is using [GOLD Parser](http://www.goldparser.org/)
 
 We use [PyAuParser](https://github.com/veblush/PyAuParser) as the parsing engine
 
+Address of the preview version of the paper[PTSG](https://arxiv.org/abs/2209.10255)
+

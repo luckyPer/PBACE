@@ -36,12 +36,6 @@ class Transition(object):
     def get_inp_event(self):
         return self.inp_event
 
-# class TransitionPath is not used
-class TransitionPath(object):
-    def __init__(self):
-        self.path = []
-        self.level = 0
+    def get_trans_name(self):
+        return self.trans_name
 
-    def add_tran_path(self, t_name):
-        self.path.append(t_name)
-        self.level = len(self.path)
